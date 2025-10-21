@@ -4,7 +4,7 @@ https://github.com/magnum357i/mpv-autosubrefresh
 
 ╔════════════════════════════════╗
 ║       MPV autosubrefresh       ║
-║             v1.0.0             ║
+║             v1.0.1             ║
 ╚════════════════════════════════╝
 
 ]]
@@ -26,17 +26,12 @@ local function updateSubInfo()
     subInfo.path   = ""
     subInfo.edited = 0
 
-    local sid = mp.get_property("sid")
+    local path = mp.get_property("current-tracks/sub/external-filename")
 
-    if sid then
+    if path then
 
-        local path = mp.get_property("current-tracks/sub/external-filename")
-
-        if path then
-
-            subInfo.path   = path
-            subInfo.edited = getEdited()
-        end
+        subInfo.path   = path
+        subInfo.edited = getEdited()
     end
 end
 
@@ -57,9 +52,9 @@ local function refreshSub()
     end
 end
 
-mp.observe_property("sid", "number", function(_, value)
+mp.observe_property("sid", "number", function(_, val)
 
-    updateSubInfo()
+    if val then updateSubInfo() end
 end)
 
 mp.observe_property("focused", "bool", function(_, val)
